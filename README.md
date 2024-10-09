@@ -1,18 +1,18 @@
 
 # Install necessary packages and dependencies before running web application:
-cd to backend folder and run ‘npm install’. 
-cd to frontend folder and run ‘npm install’.
-These will run dependencies to properly run both applications.
+1. cd to backend folder and run ‘npm install’. 
+2. cd to frontend folder and run ‘npm install’.
+3. These will run dependencies to properly run both applications.
 
 
 # Running Frontend and Backend Server:
 
-Go to the frontend folder and run terminal there.
-Run the command ‘npm start’ to run the frontend application.
-The frontend is running on port 3000: http://localhost:3000/. 
-Go to the backend folder and run the terminal there.
-Run the command ‘node server.js” to run the frontend application.
-The backend is running on port 8080: http://localhost:8080/. 
+1. Go to the frontend folder and run terminal there.
+2. Run the command ‘npm start’ to run the frontend application.
+3. The frontend is running on port 3000: http://localhost:3000/. 
+4. Go to the backend folder and run the terminal there.
+5. Run the command ‘node server.js” to run the frontend application.
+6. The backend is running on port 8080: http://localhost:8080/. 
 
 # Getting Started with Create React App
 
