@@ -12,20 +12,12 @@ const genrePredictions = [
   { genre: "Jazz", confidence: 0.2 },
 ];
 
-// function to make API call to backend
-const testRequest = () => {
-  axios.get('http://localhost:8080').then((data) => {
-    console.log(data)
-  })
-}
-
-// Dialog component
 const Dialog = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full">
+      <div className="bg-white p-6 rounded-lg max-w-4xl w-full">
         {children}
         <button 
           onClick={onClose}
@@ -38,6 +30,7 @@ const Dialog = ({ isOpen, onClose, children }) => {
   );
 };
 
+
 export const MusicGenreClassifier = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
@@ -48,13 +41,13 @@ export const MusicGenreClassifier = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="h-[90vh] pb-10 bg-gray-100 flex flex-col">
       <Navbar />
       <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold mb-8 text-center">Music Genre Classifier</h1>
+        <h1 className="text-4xl font-bold mb-2 text-center">Upload a song to</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">discover the genre...</h1>
         <UploadButton onFileChange={handleFileChange} />
       </div>
-      {/* <button onClick={testRequest}>Click Me!</button> */}
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
         <GenrePredictionChart predictions={genrePredictions} />
