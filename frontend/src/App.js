@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import axios from 'axios';
 import { MusicGenreClassifier } from './components/MusicGenreClassifier';
+import Footer from './components/Footer';
 
 // function to make API call to backend
 const testRequest = () => {
@@ -17,6 +18,8 @@ function App() {
         <MusicGenreClassifier />
         {/* <button onClick={testRequest}>Click Me!</button> */}
       </main>
+      <Footer />
+
     </div>
   );
 }
