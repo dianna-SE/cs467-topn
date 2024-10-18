@@ -13,9 +13,9 @@ const testRequest = () => {
 function App() {
   return (
     <div className="App">
-      <main style={{ padding: '20px' }}>
+      <main>
         <MusicGenreClassifier />
-        <button onClick={testRequest}>Click Me!</button>
+        {/* <button onClick={testRequest}>Click Me!</button> */}
       </main>
     </div>
   );
