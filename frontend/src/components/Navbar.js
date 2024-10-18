@@ -1,5 +1,13 @@
 import React from 'react';
 import { Music, Github } from 'lucide-react';
+import axios from 'axios';
+
+// function to make API call to backend
+const testRequest = () => {
+  axios.get('http://localhost:8080').then((data) => {
+    console.log(data)
+  })
+}
 
 export const Navbar = () => (
   <nav className="bg-white shadow-md">
@@ -17,6 +25,8 @@ export const Navbar = () => (
             <a href="#" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900">
               About
             </a>
+            <button onClick={testRequest}>LOCAL API TEST!</button>
+
           </div>
         </div>
         <div className="flex items-center">
