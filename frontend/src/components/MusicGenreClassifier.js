@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar } from './Navbar';
 import { UploadButton } from './UploadButton';
 import { GenrePredictionChart } from './GenrePredictionChart';
-import axios from 'axios';
+import { Dialog } from './Dialog';
 
 const genrePredictions = [
   { genre: "Rock", confidence: 0.8 },
@@ -11,25 +11,6 @@ const genrePredictions = [
   { genre: "Electronic", confidence: 0.3 },
   { genre: "Jazz", confidence: 0.2 },
 ];
-
-const Dialog = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg max-w-4xl w-full">
-        {children}
-        <button 
-          onClick={onClose}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
 
 export const MusicGenreClassifier = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
