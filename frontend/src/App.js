@@ -1,8 +1,7 @@
-// Source: https://dev.to/techcheck/creating-a-react-node-and-express-app-1ieg
-
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import axios from 'axios';
+import { MusicGenreClassifier } from './components/MusicGenreClassifier';
 
 // function to make API call to backend
 const testRequest = () => {
@@ -14,15 +13,10 @@ const testRequest = () => {
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-
+      <main style={{ padding: '20px' }}>
+        <MusicGenreClassifier />
         <button onClick={testRequest}>Click Me!</button>
-
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-      </header>
+      </main>
     </div>
   );
 }
