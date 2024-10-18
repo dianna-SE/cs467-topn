@@ -19,7 +19,7 @@ const testRequest = () => {
   })
 }
 
-// Custom Dialog component
+// Dialog component
 const Dialog = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
@@ -54,7 +54,7 @@ export const MusicGenreClassifier = () => {
         <h1 className="text-4xl font-bold mb-8 text-center">Music Genre Classifier</h1>
         <UploadButton onFileChange={handleFileChange} />
       </div>
-      <button onClick={testRequest}>Click Me!</button>
+      {/* <button onClick={testRequest}>Click Me!</button> */}
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
         <GenrePredictionChart predictions={genrePredictions} />
