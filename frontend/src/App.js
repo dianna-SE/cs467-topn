@@ -1,3 +1,9 @@
+// Author: Andrew Gaynor
+// Date Accessed: October 10, 2024
+// Starter frontend application with React and Express
+// Adapted from source URL:
+//      https://dev.to/techcheck/creating-a-react-node-and-express-app-1ieg
+
 import React from 'react';
 import './App.css';
 import axios from 'axios';
