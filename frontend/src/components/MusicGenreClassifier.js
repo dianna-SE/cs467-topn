@@ -27,10 +27,12 @@ export const MusicGenreClassifier = () => {
       <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mb-2 text-center">Upload a song to</h1>
         <h1 className="text-4xl font-bold mb-8 text-center">discover the genre...</h1>
-        <UploadButton onFileChange={handleFileChange} />
+        <UploadButton onFileChange={handleFileChange} />        
+        <h2><br></br>Note: Only WAV files are accepted.</h2>
       </div>
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
+        <p>Based on your input, here are the results:</p>
         <GenrePredictionChart predictions={genrePredictions} />
       </Dialog>
     </div>
