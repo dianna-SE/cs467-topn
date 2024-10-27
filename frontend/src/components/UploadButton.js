@@ -6,7 +6,7 @@ export const UploadButton = ({ onFileChange }) => (
     <input
       id="file-upload"
       type="file"
-      accept="audio/*"
+      accept=".wav"  // changed to take in only wav files
       className="hidden"
       onChange={onFileChange}
     />
