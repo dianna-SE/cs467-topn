@@ -14,6 +14,9 @@
 #   - Test that audio file is less than X seconds (not too long) or if able
 #       to handle large files
 
+# Note to split this into SEPARATE files - ones for testing and one
+# for audio input
+
 import unittest
 import wave
 import torch
