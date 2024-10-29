@@ -4,6 +4,7 @@ import { UploadButton } from './UploadButton';
 import { GenrePredictionChart } from './GenrePredictionChart';
 import { Dialog } from './Dialog';
 
+// sample data... will replace w/ api response containing our model's output
 const genrePredictions = [
   { genre: "Rock", confidence: 0.8 },
   { genre: "Pop", confidence: 0.6 },
@@ -22,17 +23,14 @@ export const MusicGenreClassifier = () => {
   };
 
   return (
-    <div className="h-[90vh] pb-10 bg-gray-100 flex flex-col">
-      <Navbar />
+    <div className="h-[85vh] pb-10 bg-gray-100 flex flex-col">
       <div className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold mb-2 text-center">Upload a song to</h1>
         <h1 className="text-4xl font-bold mb-8 text-center">discover the genre...</h1>
-        <UploadButton onFileChange={handleFileChange} />        
-        <h2><br></br>Note: Only WAV files are accepted.</h2>
+        <UploadButton onFileChange={handleFileChange} />
       </div>
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
-        <p>Based on your input, here are the results:</p>
         <GenrePredictionChart predictions={genrePredictions} />
       </Dialog>
     </div>

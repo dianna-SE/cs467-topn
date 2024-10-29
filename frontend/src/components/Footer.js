@@ -1,10 +1,11 @@
+// Updated Footer Component
 import React from 'react';
 import { Github, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="h-[10vh] bg-gray-100 border-t py-4">
-      <div className="container mx-auto px-6 h-full">
+    <footer className="h-[8vh] bg-gray-100 border-t py-4 px-16">
+      <div className="w-full px-4 h-full"> {/* Replace 'container mx-auto' */}
         <div className="flex justify-between items-center h-full">
           <div className="text-sm text-gray-600">
             © {new Date().getFullYear()} CS467 Capstone Project - Oregon State University
