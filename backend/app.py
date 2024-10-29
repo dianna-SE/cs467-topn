@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import torch
-from train_model import GenreClassificationCNN, audio_to_melspectrogram  # Import necessary components
+from train_model import GenreClassificationCNN, audio_to_melspectrogram  
 import os
 
 # Define the model
@@ -22,6 +22,7 @@ genre_to_label = {
     9: "rock"
 }
 
+
 # Load the model once at startup
 def load_model(model_path, num_classes=10):
     model = GenreClassificationCNN(num_classes=num_classes)
@@ -29,7 +30,9 @@ def load_model(model_path, num_classes=10):
     model.eval()
     return model
 
+
 model = load_model("genre_classification_cnn.pth")  # Adjust the path if needed
+
 
 # Helper function to process audio file
 def preprocess_audio(file_path):
@@ -41,6 +44,7 @@ def preprocess_audio(file_path):
     spectrogram = torch.nn.functional.interpolate(spectrogram, size=(64, 64))
     return spectrogram
 
+
 # Prediction function
 def predict_top_genres(model, spectrogram, top_k=10):
     with torch.no_grad():
@@ -50,24 +54,26 @@ def predict_top_genres(model, spectrogram, top_k=10):
         top_genres = [(genre_to_label[class_idx.item()], confidence.item()) for class_idx, confidence in zip(top_classes[0], top_p[0])]
         return top_genres
 
+
 # API route to handle file upload and prediction
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
-    
+
     file = request.files['file']
     file_path = "temp_audio.wav"
     file.save(file_path)
-    
+
     spectrogram = preprocess_audio(file_path)
     os.remove(file_path)  # Clean up temporary file
-    
+
     if spectrogram is None:
         return jsonify({'error': 'Error processing audio file'}), 500
-    
+
     top_genres = predict_top_genres(model, spectrogram, top_k=10)
     return jsonify({'top_genres': top_genres})
+
 
 # Run the app
 if __name__ == "__main__":
