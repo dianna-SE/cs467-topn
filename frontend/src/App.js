@@ -4,29 +4,30 @@
 // Adapted from source URL:
 //      https://dev.to/techcheck/creating-a-react-node-and-express-app-1ieg
 
+// App.js
 import React from 'react';
 import './App.css';
-import axios from 'axios';
-import { MusicGenreClassifier } from './components/MusicGenreClassifier';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';  // Import Navbar once
 import Footer from './components/Footer';
-
-// function to make API call to backend
-const testRequest = () => {
-  axios.get('http://localhost:8080').then((data) => {
-    console.log(data)
-  })
-}
+import { MusicGenreClassifier } from './components/MusicGenreClassifier';
+import Home from './pages/Home';
+import About from './pages/About';
 
 function App() {
   return (
-    <div className="App">
-      <main>
-        <MusicGenreClassifier />
-        {/* <button onClick={testRequest}>Click Me!</button> */}
-      </main>
-      <Footer />
-
-    </div>
+    <Router>
+      <Navbar/>
+      <div className="App">
+        <main className="">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
