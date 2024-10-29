@@ -14,18 +14,19 @@ def audio_to_melspectrogram(file_path, sr=22050, n_mels=64):
     try:
         # Use audioread to read the audio file
         with audioread.audio_open(file_path) as input_file:
-            total_samples = input_file.samplerate * input_file.duration
-            y = np.zeros(int(total_samples))
+            y = []  # Initialize an empty list to gather audio samples
 
-            i = 0
+            # Collect all audio buffers in the list
             for buf in input_file:
                 buf_array = np.frombuffer(buf, dtype=np.int16) / 32768.0  # Convert buffer to float
-                y[i:i+len(buf_array)] = buf_array
-                i += len(buf_array)
-        
-        # If the sample rate is different from what we need, resample the audio
+                y.extend(buf_array)  # Dynamically append buffer data to y
+
+            # Convert the list to a NumPy array for further processing
+            y = np.array(y)
+
+        # If the sample rate is different from the target, resample the audio
         if input_file.samplerate != sr:
-            y = librosa.resample(y, input_file.samplerate, sr)
+            y = librosa.resample(y, orig_sr=input_file.samplerate, target_sr=sr)
 
         # Generate Mel Spectrogram
         spectrogram = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels)
