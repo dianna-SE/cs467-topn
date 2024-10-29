@@ -52,7 +52,7 @@ def predict_top_genres(model, spectrogram, top_k=10):
 # Main function to load model, process audio, and predict genre
 if __name__ == "__main__":
     model_path = "genre_classification_cnn.pth"  # Path to the saved model
-    audio_path = "./It_Goes_Wann.wav"  # Path to the audio file to test
+    audio_path = "./generic_rock_song_test.wav"  # Path to the audio file to test
 
     # Load the model
     model = load_model(model_path)
