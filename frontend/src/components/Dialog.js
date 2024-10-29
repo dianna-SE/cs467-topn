@@ -5,7 +5,7 @@ export const Dialog = ({ isOpen, onClose, children }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg max-w-4xl w-full">
+      <div className="bg-white p-6 rounded-lg max-w-4xl w-full min-h-[300px] min-w-[400px] h-3/4 flex flex-col justify-between">
         {children}
         <button 
           onClick={onClose}
