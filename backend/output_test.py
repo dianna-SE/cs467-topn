@@ -4,7 +4,7 @@ import requests
 url = "http://127.0.0.1:5000/predict"
 
 # Path to the audio file you want to test
-audio_file_path = "disco.wav"
+audio_file_path = "dance_song.wav"
 
 # Send a POST request with the audio file
 with open(audio_file_path, "rb") as audio_file:

@@ -1,25 +1,41 @@
 import React, { useState } from 'react';
-import { Navbar } from './Navbar';
 import { UploadButton } from './UploadButton';
 import { GenrePredictionChart } from './GenrePredictionChart';
 import { Dialog } from './Dialog';
 
-// sample data... will replace w/ api response containing our model's output
-const genrePredictions = [
-  { genre: "Rock", confidence: 0.8 },
-  { genre: "Pop", confidence: 0.6 },
-  { genre: "Hip Hop", confidence: 0.4 },
-  { genre: "Electronic", confidence: 0.3 },
-  { genre: "Jazz", confidence: 0.2 },
-];
-
 export const MusicGenreClassifier = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [predictions, setPredictions] = useState([]);
   const [file, setFile] = useState(null);
 
+  // Function to handle file selection and open modal
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
     setIsModalOpen(true);
+    handleFileUpload(selectedFile); // Start file upload
+  };
+
+  // Function to handle file upload to backend
+  const handleFileUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPredictions(data.top_genres); // Update predictions from response
+      } else {
+        console.error("Error:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
   };
 
   return (
@@ -31,7 +47,7 @@ export const MusicGenreClassifier = () => {
       </div>
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
-        <GenrePredictionChart predictions={genrePredictions} />
+        <GenrePredictionChart predictions={predictions} />
       </Dialog>
     </div>
   );
