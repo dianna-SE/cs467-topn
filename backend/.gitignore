@@ -8,3 +8,14 @@
 
 # misc
 .DS_Store
+
+# Virtual environment
+venv/
+.env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Audio files
+*.wav

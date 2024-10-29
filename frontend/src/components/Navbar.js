@@ -1,17 +1,19 @@
+// Navbar.js
 import React from 'react';
 import { Music, Github } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 // function to make API call to backend
 const testRequest = () => {
   axios.get('http://localhost:8080').then((data) => {
-    console.log(data)
-  })
-}
+    console.log(data);
+  });
+};
 
 export const Navbar = () => (
-  <nav className="bg-white shadow-md">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <nav className="bg-white shadow-md px-16">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex justify-between h-16">
         <div className="flex">
           <div className="flex-shrink-0 flex items-center">
@@ -19,14 +21,13 @@ export const Navbar = () => (
             <span className="ml-2 text-xl font-bold text-gray-800">GenreAI</span>
           </div>
           <div className="ml-6 flex space-x-8">
-            <a href="#" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
+            <Link to="/" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">
               Home
-            </a>
-            <a href="#" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900">
+            </Link>
+            <Link to="/about" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900">
               About
-            </a>
+            </Link>
             <button onClick={testRequest}>LOCAL API TEST!</button>
-
           </div>
         </div>
         <div className="flex items-center">
@@ -38,3 +39,5 @@ export const Navbar = () => (
     </div>
   </nav>
 );
+
+export default Navbar;  // Change this line to use default export
