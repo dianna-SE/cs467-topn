@@ -4,59 +4,27 @@
 #  Adapted from source URL:
 #       https://theaisummer.com/unit-test-deep-learning/
 
-
-# Ideas to test:
-#   - Test if file is corrupted or not before passing
-#       to neural network model (Some checks made)
-#   - Test if model loads successfully with servers
-#   - Edge cases (empty files, WAV but no sound, no file uploaded, etc.)
-#          (Some checks made)
-#   - Test that audio file is less than X seconds (not too long) or if able
-#       to handle large files
-
+from train_model import GenreClassificationCNN
+import torch
 import unittest
 import wave
-import torch
+import os
 
-# may need to convert the model in .ipynb file to .py to properly test model ?
-# run test: python3 -m unittest test_model.py
+# running in root dir: python3 -m unittest tests.unittest_model
 
 
 class ModelTest(unittest.TestCase):
-    def load_model(self):
-        """This method loads the model and returns it while handling exception
-        errors."""
+    def test_load_model(self):
+        """Tests by loading the model and that it exists."""
 
-        # source:
-        # https://pytorch.org/tutorials/beginner/saving_loading_models.html
-        # accessed october 27, 2024
-        # function to load model
+        # get the relative path using os
+        model_path = os.path.join(
+            os.path.dirname(__file__), "../genre_classification_cnn.pth"
+        )
 
-        # (file to path -- assuming model is in .pth PYTORCH file)
-        model_path = "../model.pth"
-
-        # try block for less cryptic error
-        try:
-            model = torch.load(model_path, weights_only=True)
-            model.eval()
-            return model
-
-        # tests missing file or incorrect path
-        except FileNotFoundError:
-            print(f"ERROR: Model does not exist at {model_path}.")
-            return None
-
-        # tests invalid or corrupt model files
-        except Exception as event:
-            print(f"ERROR: Failed to load model: {str(event)}")
-            return None
-
-    # Testing audio input and model in CLI (through unit testing)
-    def test_invalid_model(self):
-        """Tests if the model exists when loading it."""
-        model = self.load_model()
-        self.assertIsNotNone(model,
-                             "ERROR: Invalid or model file does not exist.")
+        model = GenreClassificationCNN(num_classes=10)
+        model.load_state_dict(torch.load(model_path))
+        model.eval()
 
     # Author: Python
     # Date Accessed: October 28, 2024
@@ -68,10 +36,7 @@ class ModelTest(unittest.TestCase):
         """Method that opens a WAV file and returns it for testing."""
 
         # working WAV
-        wav_path = (
-            "./audio_datasets/Joint_C_Beat_Laboratory_"
-            "War_with_Yourself.wav"
-            )
+        wav_path = "./tests/audio_datasets/Joint_C_Beat_Laboratory_War_with_Yourself.wav"
 
         # invalid WAV (corrupt)
         # wav_path = ("./audio_datasets/corrupt_file.wav")
@@ -128,6 +93,11 @@ class ModelTest(unittest.TestCase):
 
     def test_model_prediction(self):
         """Tests if the model predictions are accurate."""
+        pass
+
+    # test genres
+    def test_hip_hop_genre_prediction(self):
+        """Tests if the model predicts the WAV file as hip hop accurately."""
         pass
 
 
