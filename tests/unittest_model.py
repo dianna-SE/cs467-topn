@@ -7,98 +7,76 @@
 from train_model import GenreClassificationCNN
 import torch
 import unittest
-import wave
 import os
 
 # running in root dir: python3 -m unittest tests.unittest_model
 
 
 class ModelTest(unittest.TestCase):
-    def test_load_model(self):
-        """Tests by loading the model and that it exists."""
+    """Unit test to validate several properties of neural network model."""
+    def load_model(self):
+        """Helper method that reuses logic to load the model."""
 
-        # get the relative path using os
+        # getting relative path through os
         model_path = os.path.join(
             os.path.dirname(__file__), "../genre_classification_cnn.pth"
         )
 
-        model = GenreClassificationCNN(num_classes=10)
+        # initialize the model
+        num_classes = 10
+        model = GenreClassificationCNN(num_classes)
         model.load_state_dict(torch.load(model_path))
         model.eval()
 
-    # Author: Python
-    # Date Accessed: October 28, 2024
-    # Documentation that provides functions and exceptions to reading and
-    #   writing WAV files.
-    # Adapted from source URL:
-    #      https://docs.python.org/3/library/wave.html
-    def open_wav(self):
-        """Method that opens a WAV file and returns it for testing."""
+        return model
 
-        # working WAV
-        wav_path = "./tests/audio_datasets/Joint_C_Beat_Laboratory_War_with_Yourself.wav"
+    def test_model_parameters(self):
+        """Tests that the model contains parameters. No parameters indicate
+        the model was not initialized correctly or the weights did not load."""
+        model = self.load_model()
 
-        # invalid WAV (corrupt)
-        # wav_path = ("./audio_datasets/corrupt_file.wav")
-        return wave.open(wav_path, mode='rb')
+        # initialize and retrieve all weights and biases of model
+        model_parameters = len(list(model.parameters()))
+        self.assertTrue(model_parameters > 0,
+                        "ERROR: Parameters missing or not loaded.")
 
-    # Tests several components of a WAV file for corruption
-    def test_wav_no_channel(self):
-        """Tests if the WAV file has no channel. This can indicate that the
-        WAV file has no audible sound."""
+    # Author: Pytorch
+    # Date Accessed: October 30, 2024
+    # Generating a random number and returns a tensor. Used to
+    # generate a test input and comparing against model prediction
+    #  Adapted from source URL:
+    #       https://pytorch.org/docs/stable/generated/torch.randn.html
 
-        # call func to open file path
-        wav_file = self.open_wav()
+    def test_valid_prediction(self):
+        """Tests if the model produces a prediction from a tensor input and
+        if the output shape matches expected shape."""
+        model = self.load_model()
 
-        # returns  number of audio channels:
-        # 1 (mono), 2 (stereo), or 3 (surround sound)
-        channels = wav_file.getnchannels()
+        # initialize random tensor with correct shape and dimensions
+        # for model processing and generate prediction
+        # a valid tensor input should have 4 dimensions: batch, channels, 
+        #   height, width
+        valid_tensor = torch.randn(1, 1, 64, 64)
+        prediction = model(valid_tensor)
 
-        # no channel indicates a possible issue with WAV file (no sound)
-        print("Channels: ", channels)
-        self.assertGreater(channels, 0, f'ERROR: No channel detected. '
-                           f'Channels: {channels}')
+        # check that the output shape matches expected shape
+        # model should product 1 prediction, 10 values (10 genres in dataset)
+        self.assertEqual(prediction.shape, (1, 10),
+                         "ERROR: Prediction is mismatched.")
 
-        wav_file.close()
+    def test_model_invalid_input_shape(self):
+        """Tests that the model raises an error when given an input with the
+        incorrect input shape. Tensors are how the model receives data to
+        make predictions."""
+        model = self.load_model()
 
-    def test_wav_no_frame_rate(self):
-        """Tests if the WAV file has a frame rate (sampling frequency)."""
-        wav_file = self.open_wav()
+        # creates a tensor with random values with invalid shapes
+        #   and missing dimensions (1, 2, 3)
+        invalid_tensor = torch.randn(1, 2, 3)
 
-        # gets sampling frequency (Hz)
-        frame_rates = wav_file.getframerate()
-
-        # having no frame rate indicates no frequency to the WAV -
-        # sound could be distorted, missing or corrupt
-        print("Frame Rates: ", frame_rates)
-        self.assertGreater(frame_rates, 0, f'ERROR: No audio frames found. '
-                           f'Sampling frequency: {frame_rates}')
-        wav_file.close()
-
-    def test_wav_no_audio_frames(self):
-        """Tests if the WAV file is empty (no audio)."""
-        wav_file = self.open_wav()
-
-        # gets the number of audio frames -
-        audio_frames = wav_file.getnframes()
-
-        # having no audio frames indicate frame count is missing
-        #   (invalid or corrupt)
-        print("Audio Frames: ", audio_frames)
-        self.assertGreater(audio_frames, 0,
-                           f'ERROR: No audio frames found. '
-                           f'Number of frames: {audio_frames}')
-
-        wav_file.close()
-
-    def test_model_prediction(self):
-        """Tests if the model predictions are accurate."""
-        pass
-
-    # test genres
-    def test_hip_hop_genre_prediction(self):
-        """Tests if the model predicts the WAV file as hip hop accurately."""
-        pass
+        # model should raise an error for invalid input shape
+        with self.assertRaises(RuntimeError):
+            model(invalid_tensor)
 
 
 if __name__ == '__main__':
