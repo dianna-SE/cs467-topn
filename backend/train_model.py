@@ -68,7 +68,7 @@ class GenreClassificationCNN(nn.Module):
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         self.fc1 = nn.Linear(64 * 8 * 8, 128)  # Can adjust based on input size
         self.fc2 = nn.Linear(128, num_classes)
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.4)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -120,7 +120,7 @@ def create_dataloader(audio_dir, batch_size=32):
 
 
 # 5. Training loop for the model
-def train_model(model, train_loader, criterion, optimizer, num_epochs=10):
+def train_model(model, train_loader, criterion, optimizer, num_epochs=30):
     model.train()
     for epoch in range(num_epochs):
         running_loss = 0.0
@@ -161,10 +161,10 @@ if __name__ == "__main__":
     num_classes = 10  # GTZAN has 10 genres
     model = GenreClassificationCNN(num_classes)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.0005)
 
     # 9. Train the model
-    train_model(model, train_loader, criterion, optimizer, num_epochs=10)
+    train_model(model, train_loader, criterion, optimizer, num_epochs=30)
 
     # 10. Save the trained model
     torch.save(model.state_dict(), "genre_classification_cnn.pth")
