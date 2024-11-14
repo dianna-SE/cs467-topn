@@ -24,12 +24,10 @@ class ModelTest(unittest.TestCase):
 
     def load_model(self):
         """
-        This helper method loads the pre-trained GenreClassificationCNN model
-        for testing.
+        Loads the pre-trained GenreClassificationCNN model for testing.
 
         Returns:
-            GenreClassificationCNN: The neural network model instance
-            for generating predictions.
+            GenreClassificationCNN: Initialized model with loaded weights.
 
         """
 
@@ -51,13 +49,10 @@ class ModelTest(unittest.TestCase):
 
     def test_model_parameters(self):
         """
-        This method checks if the model has parameters loaded. If
-        the model has no parameters, it means the model was not
-        initialized correctly, or the weights did not load.
+        Checks if the model has parameters loaded for proper initialization.
         """
         model = self.load_model()
 
-        # Initialize and retrieve all weights and biases of model
         model_parameters = len(list(model.parameters()))
         self.assertTrue(model_parameters > 0,
                         "ERROR: Parameters missing or not loaded.")
@@ -71,9 +66,7 @@ class ModelTest(unittest.TestCase):
 
     def test_valid_prediction(self):
         """
-        This method checks that the model generates a prediction through
-        a given tensor input and compares if the output shape matches the
-        expected shape dimensions.
+        Checks that the model predicts shape accurately with given input.
         """
         model = self.load_model()
 
@@ -94,11 +87,11 @@ class ModelTest(unittest.TestCase):
 
     def test_model_invalid_input_shape(self):
         """
-        This method checks if the model raises an error when given
-        an input with invalid dimensions.
+        Checks if the model raises an error when given
+        a tensor with incorrect dimensions.
 
         Raises:
-            Runtime error if the model detects input with incorrect dimensions.
+            Runtime error if model identifies the tensor.
         """
         model = self.load_model()
 
@@ -106,7 +99,6 @@ class ModelTest(unittest.TestCase):
         #   and missing dimensions (1, 2, 3)
         invalid_tensor = torch.randn(1, 2, 3)
 
-        # The model should raise an error for invalid input shape
         with self.assertRaises(RuntimeError):
             model(invalid_tensor)
 
@@ -122,18 +114,19 @@ class ModelTest(unittest.TestCase):
 
     def test_zero_tensor_value(self):
         """
-        This method tests if the model can handle tensors with a
+        Tests if the model can handle tensors with a
         zero scalar value.
+
+        Raises:
+            Assertion error if model contains NaN or infinite values.
         """
         model = self.load_model()
 
-        # Generates a torch with a zero scalar value
+        # Generate and get model output
         zero_tensor = torch.zeros(1, 1, 64, 64)
-
-        # Passes tensor in and gets model output
         output = model(zero_tensor)
 
-        # Checks if model displays an error for zero scalar value
+        # Fails test if the model displays an error for zero tensor value
         self.assertFalse(torch.isnan(output).any() or
                          torch.isinf(output).any(),
                          "ERROR: Model output contains NaN or infinite values "
@@ -141,41 +134,48 @@ class ModelTest(unittest.TestCase):
 
     def test_high_tensor_value(self):
         """
-        This method tests the model's output with high tensor values The model
+        Checks the model's output with high tensor values The model
         should display an error with NaN or infinite values.
+
+        Raises:
+            Assertion error if model contains NaN or infinite values.
         """
         model = self.load_model()
 
-        # Generates a torch with a high scalar value
+        # Generate and get model output
         high_tensor = torch.full((1, 1, 64, 64), 999, dtype=torch.float)
-
-        # Passes in a tensor with a high scalar value and gets model output
         output = model(high_tensor)
 
-        # Displays output error ifany NaN or infinite
-        # scalar values are discovered
+        # Fails test if model displays error for high tensor value
         self.assertFalse(torch.isnan(output).any() or
                          torch.isinf(output).any(),
                          "ERROR: Model output contains NaN or infinite values "
                          "for a tensor with a high-filled scalar value.")
 
-    def test_model_linear_layers(self):
+    def append_layers(self, layer_type):
         """
-        This method checks for existing fully connected (linear)
-        layers.
-
-        Raises:
-            Assertion error if no linear layers are found.
+        Helper method that appends a specific type of layer from the model.
         """
         model = self.load_model()
 
-        # Break down layers in the model's children
-        linear_layers = []
-        for layer in model.children():
+        # Find layers in model's children and append to list
+        layers = []
 
-            # Identify linear layer and append to list
-            if isinstance(layer, torch.nn.Linear):
-                linear_layers.append(layer)
+        for layer in model.children():
+            if isinstance(layer, layer_type):
+                layers.append(layer)
+
+        return layers
+
+    def test_model_linear_layers(self):
+        """
+        Checks for existing fully connected (linear) layers.
+
+        Raises:
+            Assertion layer if no linear layers exist.
+        """
+
+        linear_layers = self.append_layers(torch.nn.Linear)
 
         # CLI output to see layers
         print("Linear layers: ", linear_layers)
@@ -185,18 +185,12 @@ class ModelTest(unittest.TestCase):
 
     def test_model_convolutional_layers(self):
         """
-        This method checks for existing convolutional layers.
+        Checks for existing convolutional layers.
 
         Raises:
-            Assertion error if no convolutional layers are found.
+            Assertion layer if no convolutional layers exist.
         """
-        model = self.load_model()
-
-        # Loops through model's children and appends convolutional layers
-        conv_layers = []
-        for layer in model.children():
-            if isinstance(layer, torch.nn.Conv2d):
-                conv_layers.append(layer)
+        conv_layers = self.append_layers(torch.nn.Conv2d)
 
         print("Convolutional layers: ", conv_layers)
 
@@ -206,18 +200,12 @@ class ModelTest(unittest.TestCase):
 
     def test_model_dropout_layers(self):
         """
-        This method checks for existing dropout layers.
+        Checks for existing dropout layers.
 
         Raises:
-            Assertion error if no dropout layers are found.
+            Assertion layer if no dropout layers exist.
         """
-        model = self.load_model()
-
-        # Loops through model's children and appends dropout layers
-        dropout_layers = []
-        for layer in model.children():
-            if isinstance(layer, torch.nn.Dropout):
-                dropout_layers.append(layer)
+        dropout_layers = self.append_layers(torch.nn.Dropout)
 
         print("Dropout layers: ", dropout_layers)
         self.assertGreater(len(dropout_layers), 0, "ERROR: No dropout layers"
