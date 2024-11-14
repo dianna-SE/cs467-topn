@@ -22,7 +22,7 @@ class AudioTest(unittest.TestCase):
     #      https://docs.python.org/3/library/wave.html
     def open_wav(self, wav_path):
         """
-        This method opens a WAV file for unit testing.
+        Opens a WAV file for unit testing.
 
         Returns:
             The opened WAV file object.
@@ -32,7 +32,7 @@ class AudioTest(unittest.TestCase):
 
     def valid_wav(self):
         """
-        This helper method returns a valid wav file for unit testing.
+        Returns a valid wav file for unit testing.
         """
         return (
             "./tests/audio_datasets/"
@@ -41,13 +41,13 @@ class AudioTest(unittest.TestCase):
 
     def corrupt_wav(self):
         """
-        This helper method returns a corrupt wav file for unit testing.
+        Returns a corrupt wav file for unit testing.
         """
         return "./tests/audio_datasets/corrupt_file.wav"
 
     def test_wav_channels(self):
         """
-        This method tests if the WAV file has at least one audio channel.
+        Checks if the WAV file has at least one audio channel.
 
         Values include audio channels:
             - Mono (1)
@@ -72,7 +72,7 @@ class AudioTest(unittest.TestCase):
 
     def test_wav_frame_rates(self):
         """
-        This method tests if the WAV file has a frame rate
+        Checks if the WAV file has a frame rate
         (sampling frequency).
 
         Raises:
@@ -83,15 +83,13 @@ class AudioTest(unittest.TestCase):
         # Get the sampling frequency (Hz)
         frame_rates = wav_file.getframerate()
 
-        # A missing frame rate can mean a potential distorted,
-        #   missing or corrupt file.
         self.assertGreater(frame_rates, 0, f'ERROR: No frequencies found. '
                            f'Sampling frequency: {frame_rates}')
         wav_file.close()
 
     def test_wav_audio_frames(self):
         """
-        This method tests if the WAV file does not contain any audio frames.
+        Checks if the WAV file does not contain any audio frames.
 
         Raises:
             Assertion error if no audio frames are found.
@@ -101,8 +99,6 @@ class AudioTest(unittest.TestCase):
         # Get the number of audio frames -
         audio_frames = wav_file.getnframes()
 
-        # Having no audio frames indicate frame count is missing
-        #   (empty, invalid, or corrupt)
         self.assertGreater(audio_frames, 0,
                            f'ERROR: No audio frames found. '
                            f'Number of frames: {audio_frames}')
@@ -117,7 +113,7 @@ class AudioTest(unittest.TestCase):
     #      https://blog.waproduction.com/how-to-understand-audio-quality-formats
     def test_sample_rate(self):
         """
-        This method tests that the sample rate is too low or
+        Checks that the sample rate is too low or
         high for model processing and handles it accordingly.
 
         Raises:
