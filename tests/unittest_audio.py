@@ -7,7 +7,8 @@
 import unittest
 import wave
 
-# running in root dir: python3 -m unittest tests.unittest_audio
+# To run these tests, run the command in the root directory:
+#       python3 -m unittest tests.unittest_audio
 
 
 class AudioTest(unittest.TestCase):
@@ -19,63 +20,118 @@ class AudioTest(unittest.TestCase):
     #   writing WAV files.
     # Adapted from source URL:
     #      https://docs.python.org/3/library/wave.html
-    def open_wav(self):
-        """Method that opens a WAV file and returns the file
-        object for testing."""
+    def open_wav(self, wav_path):
+        """
+        This method opens a WAV file for unit testing.
 
-        # working WAV
-        wav_path = (
+        Returns:
+            The opened WAV file object.
+        """
+
+        return wave.open(wav_path, mode='rb')
+
+    def valid_wav(self):
+        """
+        This helper method returns a valid wav file for unit testing.
+        """
+        return (
             "./tests/audio_datasets/"
             "Joint_C_Beat_Laboratory_War_with_Yourself.wav"
         )
 
-        # invalid WAV (corrupt)
-        # wav_path = ("./audio_datasets/corrupt_file.wav")
-        return wave.open(wav_path, mode='rb')
+    def corrupt_wav(self):
+        """
+        This helper method returns a corrupt wav file for unit testing.
+        """
+        return "./tests/audio_datasets/corrupt_file.wav"
 
-    # checks several components of a WAV file for invalid, missing, or corrupt
     def test_wav_channels(self):
-        """Tests if the WAV file has at least 1 audio channel. Having
-        no channel can indicate that the file contains no audible sound."""
+        """
+        This method tests if the WAV file has at least one audio channel.
 
-        # call func to open file path
-        wav_file = self.open_wav()
+        Values include audio channels:
+            - Mono (1)
+            - Stero (2)
+            - Surround sound (3)
 
-        # returns  number of audio channels:
-        # 1 (mono), 2 (stereo), or 3 (surround sound)
+        Raises:
+            Assertion error if there is no channel detected when opening
+            the WAV file.
+        """
+
+        # Opens a file path
+        wav_file = self.open_wav(self.valid_wav())
+
+        # Return the number of audio channels
         channels = wav_file.getnchannels()
 
-        # no channel indicates a possible issue with WAV file (no sound)
         self.assertGreater(channels, 0, f'ERROR: No channel detected. '
                            f'Channels: {channels}')
 
         wav_file.close()
 
     def test_wav_frame_rates(self):
-        """Tests if the WAV file has a frame rate (sampling frequency)."""
-        wav_file = self.open_wav()
+        """
+        This method tests if the WAV file has a frame rate
+        (sampling frequency).
 
-        # gets sampling frequency (Hz)
+        Raises:
+            Assertion error if there are no frequencies.
+        """
+        wav_file = self.open_wav(self.valid_wav())
+
+        # Get the sampling frequency (Hz)
         frame_rates = wav_file.getframerate()
 
-        # having no frame rate indicates no frequency to the WAV -
-        # sound could be distorted, missing or corrupt
-        self.assertGreater(frame_rates, 0, f'ERROR: No audio frames found. '
+        # A missing frame rate can mean a potential distorted,
+        #   missing or corrupt file.
+        self.assertGreater(frame_rates, 0, f'ERROR: No frequencies found. '
                            f'Sampling frequency: {frame_rates}')
         wav_file.close()
 
     def test_wav_audio_frames(self):
-        """Tests if the WAV file is empty (no audio)."""
-        wav_file = self.open_wav()
+        """
+        This method tests if the WAV file does not contain any audio frames.
 
-        # gets the number of audio frames -
+        Raises:
+            Assertion error if no audio frames are found.
+        """
+        wav_file = self.open_wav(self.valid_wav())
+
+        # Get the number of audio frames -
         audio_frames = wav_file.getnframes()
 
-        # having no audio frames indicate frame count is missing
-        #   (eempty, invalid, or corrupt)
+        # Having no audio frames indicate frame count is missing
+        #   (empty, invalid, or corrupt)
         self.assertGreater(audio_frames, 0,
                            f'ERROR: No audio frames found. '
                            f'Number of frames: {audio_frames}')
+
+        wav_file.close()
+
+    # Author: WA Production
+    # Date Accessed: November 13, 2024
+    # Understanding audio quality formats (WAV, MP3, FLAC)
+    #     Examples of bit sizes and frame rates for WAV files
+    # Adapted from source URL:
+    #      https://blog.waproduction.com/how-to-understand-audio-quality-formats
+    def test_sample_rate(self):
+        """
+        This method tests that the sample rate is too low or
+        high for model processing and handles it accordingly.
+
+        Raises:
+            Exception error if the sample rate is either too low
+            or too high.
+        """
+        # Open wav file and get sample rate
+        wav_file = self.open_wav(self.valid_wav())
+        sample_rate = wav_file.getframerate()
+
+        # Checks if the file is within frequency range for WAV file
+        self.assertTrue(44100 <= sample_rate <= 96000,
+                        f"ERROR: Sample rate {sample_rate} Hz is invalid."
+                        "Recommended range is between 44.1-96 kHz.")
 
         wav_file.close()
 
