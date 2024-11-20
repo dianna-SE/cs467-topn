@@ -4,25 +4,25 @@ import { Github, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="h-[8vh] bg-gray-100 border-t py-4 px-16">
-      <div className="w-full px-4 h-full"> {/* Replace 'container mx-auto' */}
+< footer className="h-[10vh] bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-400 border-t dark:border-gray-800 py-4 px-16">
+    <div className="w-full px-4 h-full"> {/* Replace 'container mx-auto' */}
         <div className="flex justify-between items-center h-full">
-          <div className="text-sm text-gray-600">
-            © {new Date().getFullYear()} CS467 Capstone Project - Oregon State University
+          <div className="text-sm">
+            © {new Date().getFullYear()} - CS467 Capstone Project - Oregon State University
           </div>
           <div className="flex items-center space-x-4">
             <a 
               href="https://github.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="flex items-center text-gray-600 hover:text-black transition-colors"
+              className="flex items-center hover:text-black dark:hover:text-gray-300 transition-colors"
             >
               <Github className="h-5 w-5 mr-2" />
               GitHub
             </a>
             <a 
               href="mailto:example@example.com" 
-              className="flex items-center text-gray-600 hover:text-black transition-colors"
+              className="flex items-center hover:text-black dark:hover:text-gray-300 transition-colors"
             >
               <Mail className="h-5 w-5 mr-2" />
               Contact

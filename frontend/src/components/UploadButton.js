@@ -6,11 +6,11 @@ export const UploadButton = ({ onFileChange }) => (
     <input
       id="file-upload"
       type="file"
-      accept=".wav"  // changed to take in only wav files
+      accept="audio/*"
       className="hidden"
       onChange={onFileChange}
     />
-    <div className="flex items-center space-x-2 bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out">
+    <div className="flex items-center space-x-2 bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transform transition-all duration-200 ease-out active:scale-95">
       <Upload className="w-5 h-5" />
       <span className="text-lg font-semibold">Upload Audio</span>
     </div>
