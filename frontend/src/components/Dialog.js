@@ -1,18 +1,36 @@
 import React from 'react';
+import { X } from 'lucide-react';
 
 export const Dialog = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
+  const handleOutsideClick = (e) => {
+    if (e.target.id === "dialog-overlay") onClose();
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg max-w-4xl w-full min-h-[300px] min-w-[400px] h-3/4 flex flex-col justify-between">
-        {children}
-        <button 
+    <div
+      id="dialog-overlay"
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20"
+      onClick={handleOutsideClick}
+    >
+      <div
+        className="bg-white p-10 rounded-lg w-full max-w-5xl h-[580px] min-w-[600px] flex flex-col relative bg-white dark:bg-gray-900 text-gray-800"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <button
           onClick={onClose}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="absolute top-4 right-4 p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-200 transition duration-200 rounded-full"
+          aria-label="Close"
         >
-          Close
+          <X size={24} />
         </button>
+
+        {/* Content Container */}
+        <div className="flex flex-col flex-1 justify-center items-center">
+          {children}
+        </div>
       </div>
     </div>
   );
