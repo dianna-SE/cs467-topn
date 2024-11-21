@@ -47,7 +47,7 @@ export const MusicGenreClassifier = () => {
       </div>
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2 className="text-2xl font-bold mb-4">Genre Predictions</h2>
-        <GenrePredictionChart predictions={predictions} />
+        <GenrePredictionChart predictions={predictions} file = {file}/>
       </Dialog>
     </div>
   );
