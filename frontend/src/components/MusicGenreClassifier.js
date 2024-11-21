@@ -75,7 +75,7 @@ export const MusicGenreClassifier = () => {
         ) : predictions.length > 0 ? (
           <>
             <h2 className="text-2xl dark:text-gray-200 font-bold mb-6">Your Track's Genre Match Results:</h2>
-            <GenrePredictionChart predictions={predictions} />
+            <GenrePredictionChart predictions={predictions} file = {file}/>
           </>
         ) : null}
       </Dialog>
