@@ -4,9 +4,10 @@ import LoadingSpinner from './LoadingSpinner';
 
 export const GenrePredictionChart = ({ predictions, loading, file}) => (
   <>
+  {/* Display using file name props */}
     <div className="top-10 right-4 p-5 mb-6 bg-gray-100 shadow-md">
       <h1><strong>File name:</strong></h1>
-      <p>{file.name.slice(0,-4)}</p>
+      <p>{file.name.slice(0,-4)}</p> {/* Remove '.wav' from file name */}
     </div>
 
     <div className="mt-5 w-full flex h-[400px] items-center justify-center dark:text-gray-200">
