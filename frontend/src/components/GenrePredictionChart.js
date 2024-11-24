@@ -67,4 +67,6 @@ export const GenrePredictionChart = ({ predictions, loading, file}) => (
       </div>
     )}
   </div>
+  </>
 );
+
