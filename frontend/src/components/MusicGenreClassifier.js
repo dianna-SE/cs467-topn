@@ -9,14 +9,16 @@ export const MusicGenreClassifier = () => {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Function to handle file selection and open modal
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
+    const file = event.target.files[0];
+    setSelectedFile(file); // Store the file into state variable 
     setErrorMessage(''); // Clear any previous error messages
     setPredictions([]); // Clear previous predictions
     setIsModalOpen(true);
-    handleFileUpload(selectedFile); // Start file upload
+    handleFileUpload(file); // Start file upload
   };
 
   // Function to handle file upload to backend
@@ -74,8 +76,9 @@ export const MusicGenreClassifier = () => {
           <ErrorMessage message={errorMessage} />
         ) : predictions.length > 0 ? (
           <>
-            <h2 className="text-2xl dark:text-gray-200 font-bold mb-6">Your Track's Genre Match Results:</h2>
-            <GenrePredictionChart predictions={predictions} />
+            {/* Display file name using state variable and property */}
+            <h2 className="text-2xl dark:text-gray-200 font-bold mb-6">Genre Match Results: <p class="font-normal">{selectedFile.name.slice(0,-4)}</p></h2>
+            <GenrePredictionChart predictions={predictions}/>
           </>
         ) : null}
       </Dialog>

@@ -2,26 +2,28 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import LoadingSpinner from './LoadingSpinner';
 
-export const GenrePredictionChart = ({ predictions, loading }) => (
-  <div className="mt-5 w-full flex h-[400px] items-center justify-center dark:text-gray-200">
+export const GenrePredictionChart = ({ predictions, loading}) => (
+  <>
+
+    <div className="mt-5 w-full flex h-[400px] items-center justify-center dark:text-gray-200">
     {loading ? (
       <LoadingSpinner />
     ) : (
       <div className="flex w-full">
-        {/* Left Side: List of Genres and Confidence */}
-        <div className="w-1/3 p-7 flex flex-col justify-center">
-          <ul>
-            {predictions.map((pred, index) => (
-              <li key={index} className="flex justify-between items-center mb-2.5 text-lg">
+          {/* Left Side: List of Genres and Confidence */}
+          <div className="w-1/3 p-7 flex flex-col justify-center">
+            <ul>
+              {predictions.map((pred, index) => (
+                <li key={index} className="flex justify-between items-center mb-2.5 text-lg">
                 <span className="flex items-center">
                   <span className="text-gray-500 font-semibold pr-4" style={{ width: '30px' }}>{index + 1}.</span>
-                  <span className="text-xl font-bold capitalize">{pred[0]}</span>
-                </span>
+                    <span className="text-xl font-bold capitalize">{pred[0]}</span>
+                  </span>
                 <span className="ml-4 pr-12">{(pred[1] * 100).toFixed(1)}%</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
         {/* Right Side: Vertical Bar Chart */}
         <div className="w-2/3 flex justify-center items-center bg-white dark:bg-gray-900 text-white rounded-lg shadow-md">
@@ -60,4 +62,6 @@ export const GenrePredictionChart = ({ predictions, loading }) => (
       </div>
     )}
   </div>
+  </>
 );
+

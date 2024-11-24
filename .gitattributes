@@ -1,0 +1,2 @@
+*.wav filter=lfs diff=lfs merge=lfs -text
+tests/audio_datasets/15_mins_disco.wav filter=lfs diff=lfs merge=lfs -text
