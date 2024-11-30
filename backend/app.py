@@ -80,7 +80,15 @@ def predict():
 def root():
     return "Hello! Music Genre Classification API is up and running."
 
+# Handle CORS for responses
+@app.after_request
+def after_request(response):
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Origin'] = 'https://top-n-music-genre-classification.onrender.com'
+    return response
 
-# Run the app
+
+# Run the app in development mode
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
