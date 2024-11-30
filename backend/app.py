@@ -75,6 +75,12 @@ def predict():
     return jsonify({'top_genres': top_genres})
 
 
+# Root Route
+@app.route('/')
+def root():
+    return "Hello! Music Genre Classification API is up and running."
+
+
 # Run the app
 if __name__ == "__main__":
     app.run(port=5000)

@@ -11,6 +11,8 @@ export const MusicGenreClassifier = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const MUSIC_GENRE_CLASSIFICATION_API=process.env.REACT_APP_MUSIC_GENRE_CLASSIFICATION_API;
+
   // Function to handle file selection and open modal
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -28,7 +30,7 @@ export const MusicGenreClassifier = () => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/predict', {
+      const response = await fetch(`${MUSIC_GENRE_CLASSIFICATION_API}/predict`, {
         method: 'POST',
         body: formData,
       });
