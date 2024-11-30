@@ -22,3 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 tests/audio_datasets/15_mins_disco.wav
+
+.env
