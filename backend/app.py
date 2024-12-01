@@ -62,6 +62,10 @@ def predict_top_genres(model, spectrogram, top_k=10):
 # API route to handle file upload and prediction
 @app.route('/predict', methods=['POST'])
 def predict():
+
+    if request.method == 'OPTIONS':
+        return '', 200
+
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
 
@@ -89,10 +93,17 @@ def root():
 @app.after_request
 def after_request(response):
     origin = request.headers.get('Origin')
-    if origin in ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]:
+
+    # Origins for dev and prod instance
+    instance_origins = ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]
+
+    if origin in instance_origins:
         response.headers['Access-Control-Allow-Origin'] = origin
+
+    # Allow specific HTTP methods and headers
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+
     return response
 
 
