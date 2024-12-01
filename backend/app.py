@@ -88,7 +88,7 @@ def predict():
     except Exception as e:
         print(f"Error: {e}")
         traceback.print_exc()
-        return jsonify({'error': 'Internal server error. Please check logs for more details.'}), 500
+        return jsonify({'ERROR: Internal server.'}), 500
 
 
 # Root Route
