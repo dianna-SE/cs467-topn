@@ -8,12 +8,7 @@ import logging
 
 # Define the model
 app = Flask(__name__)
-# Use for development instance
-# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
 CORS(app)
-
-# # Use for production instance
-# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
 
 # Genre labels
 genre_to_label = {
@@ -76,7 +71,7 @@ def predict():
 
         file = request.files['file']
         file_path = "temp_audio.wav"
-        logging.debug("Saving the uploaded file to file_path")
+        logging.debug(f"Saving the uploaded file to file_path: {file_path}")
         file.save(file_path)
 
         spectrogram = preprocess_audio(file_path)
