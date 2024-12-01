@@ -6,7 +6,7 @@ import os
 
 # Define the model
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://top-n-music-genre-classification.onrender.com"}})
+CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
 
 # Genre labels
 genre_to_label = {
@@ -80,15 +80,18 @@ def predict():
 def root():
     return "Hello! Music Genre Classification API is up and running."
 
+
 # Handle CORS for responses
 @app.after_request
 def after_request(response):
+    origin = request.headers.get('Origin')
+    if origin in ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]:
+        response.headers['Access-Control-Allow-Origin'] = origin
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    response.headers['Access-Control-Allow-Origin'] = 'https://top-n-music-genre-classification.onrender.com'
     return response
 
 
 # Run the app in development mode
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=8000)
