@@ -3,14 +3,15 @@ from flask_cors import CORS
 import torch
 from train_model import GenreClassificationCNN, audio_to_melspectrogram  
 import os
+import traceback
 
 # Define the model
 app = Flask(__name__)
 # Use for development instance
-# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
+CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
 
-# Use for production instance
-CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
+# # Use for production instance
+# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
 
 # Genre labels
 genre_to_label = {
@@ -62,25 +63,32 @@ def predict_top_genres(model, spectrogram, top_k=10):
 # API route to handle file upload and prediction
 @app.route('/predict', methods=['POST'])
 def predict():
+    try:
 
-    if request.method == 'OPTIONS':
-        return '', 200
+        if request.method == 'OPTIONS':
+            return '', 200
 
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file uploaded'}), 400
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file uploaded'}), 400
 
-    file = request.files['file']
-    file_path = "temp_audio.wav"
-    file.save(file_path)
+        file = request.files['file']
+        file_path = "temp_audio.wav"
+        file.save(file_path)
 
-    spectrogram = preprocess_audio(file_path)
-    os.remove(file_path)  # Clean up temporary file
+        spectrogram = preprocess_audio(file_path)
+        os.remove(file_path)  # Clean up temporary file
 
-    if spectrogram is None:
-        return jsonify({'error': 'Error processing audio file'}), 500
+        if spectrogram is None:
+            return jsonify({'error': 'Error processing audio file'}), 500
 
-    top_genres = predict_top_genres(model, spectrogram, top_k=10)
-    return jsonify({'top_genres': top_genres})
+        top_genres = predict_top_genres(model, spectrogram, top_k=10)
+        return jsonify({'top_genres': top_genres})
+
+    # Adding try except for clear error handling
+    except Exception as e:
+        print(f"Error: {e}")
+        traceback.print_exc()
+        return jsonify({'error': 'Internal server error. Please check logs for more details.'}), 500
 
 
 # Root Route
