@@ -12,10 +12,10 @@ export const MusicGenreClassifier = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   // Development URL - Use this when testing locally with npm start
-  const MUSIC_GENRE_CLASSIFICATION_API = "http://127.0.0.1:8000/"; 
+  // const MUSIC_GENRE_CLASSIFICATION_API = "http://127.0.0.1:8000/"; 
 
   // Production URL - Use this when testing in deployment/production instance
-  // const MUSIC_GENRE_CLASSIFICATION_API = "https://top-n-music-genre-classification-backend.onrender.com"; 
+  const MUSIC_GENRE_CLASSIFICATION_API = "https://top-n-music-genre-classification-backend.onrender.com"; 
 
   // Function to handle file selection and open modal
   const handleFileChange = (event) => {
