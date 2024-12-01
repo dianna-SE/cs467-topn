@@ -8,7 +8,8 @@ import traceback
 # Define the model
 app = Flask(__name__)
 # Use for development instance
-CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
+# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # # Use for production instance
 # CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
@@ -99,15 +100,14 @@ def root():
 # Handle CORS for responses
 @app.after_request
 def after_request(response):
-    origin = request.headers.get('Origin')
+    # origin = request.headers.get('Origin')
 
     # Origins for dev and prod instance
-    instance_origins = ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]
+    # instance_origins = ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]
 
-    if origin in instance_origins:
-        response.headers['Access-Control-Allow-Origin'] = origin
-
-    # Allow specific HTTP methods and headers
+    # if origin in instance_origins:
+    #     response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
 
