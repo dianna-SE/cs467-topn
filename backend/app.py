@@ -61,44 +61,44 @@ def predict_top_genres(model, spectrogram, top_k=10):
 
 
 # API route to handle file upload and prediction
-# @app.route('/predict', methods=['POST'])
-# def predict():
-#     try:
-#         logging.debug("Request to backend success!")
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        logging.debug("Request to backend success!")
 
-#         if 'file' not in request.files:
-#             logging.error("ERROR 400: No file in request")
-#             return jsonify({'error': 'No file uploaded'}), 400
+        if 'file' not in request.files:
+            logging.error("ERROR 400: No file in request")
+            return jsonify({'error': 'No file uploaded'}), 400
 
-#         logging.info("File in the request.files!")
+        logging.info("File in the request.files!")
 
-#         file = request.files['file']
-#         file_path = "temp_audio.wav"
-#         logging.debug(f"Saving the uploaded file to file_path: {file_path}")
-#         file.save(file_path)
+        file = request.files['file']
+        file_path = "temp_audio.wav"
+        logging.debug(f"Saving the uploaded file to file_path: {file_path}")
+        file.save(file_path)
 
-#         spectrogram = preprocess_audio(file_path)
-#         os.remove(file_path)  # Clean up temporary file
-#         logging.debug("Removing temporary file")
+        spectrogram = preprocess_audio(file_path)
+        os.remove(file_path)  # Clean up temporary file
+        logging.debug("Removing temporary file")
 
-#         if spectrogram is None:
-#             logging.error("ERROR 500: Error processing audio file.")
-#             return jsonify({'error': 'Error processing audio file'}), 500
+        if spectrogram is None:
+            logging.error("ERROR 500: Error processing audio file.")
+            return jsonify({'error': 'Error processing audio file'}), 500
 
-#         top_genres = predict_top_genres(model, spectrogram, top_k=10)
-#         logging.info("Prediction is successful, top genres displayed")
-#         return jsonify({'top_genres': top_genres})
+        top_genres = predict_top_genres(model, spectrogram, top_k=10)
+        logging.info("Prediction is successful, top genres displayed")
+        return jsonify({'top_genres': top_genres})
 
-#     except Exception as e:
-#         print(f"Error: {e}")
-#         logging.error("ERROR 500: Internal server")
-#         traceback.print_exc()
-#         return jsonify({'ERROR: Internal server.'}), 500
+    except Exception as e:
+        print(f"Error: {e}")
+        logging.error("ERROR 500: Internal server")
+        traceback.print_exc()
+        return jsonify({'ERROR: Internal server.'}), 500
 
 # Test
-@app.route('/predict', methods=['POST'])
-def predict_test():
-    return jsonify({"message": "Request was successful on Render."}), 200
+# @app.route('/predict', methods=['POST'])
+# def predict_test():
+#     return jsonify({"message": "Request was successful on Render."}), 200
 
 
 # Root Route
