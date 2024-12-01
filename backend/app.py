@@ -6,7 +6,11 @@ import os
 
 # Define the model
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
+# Use for development instance
+# CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
+
+# Use for production instance
+CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
 
 # Genre labels
 genre_to_label = {

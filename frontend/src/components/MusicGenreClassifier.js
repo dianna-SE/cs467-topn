@@ -11,7 +11,8 @@ export const MusicGenreClassifier = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const MUSIC_GENRE_CLASSIFICATION_API=process.env.REACT_APP_MUSIC_GENRE_CLASSIFICATION_API;
+  // const MUSIC_GENRE_CLASSIFICATION_API = "http://127.0.0.1:8000/"; // Development URL
+  const MUSIC_GENRE_CLASSIFICATION_API = "https://top-n-music-genre-classification-backend.onrender.com"; // Production URL
 
   // Function to handle file selection and open modal
   const handleFileChange = (event) => {
@@ -30,8 +31,11 @@ export const MusicGenreClassifier = () => {
     formData.append('file', file);
 
     try {
-      // const response = await fetch(`${MUSIC_GENRE_CLASSIFICATION_API}/predict`, {
-      const response = await fetch(`http://127.0.0.1:8000/predict`, {
+      // Use for development instance
+      // const response = await fetch(`http://127.0.0.1:8000/predict`, {
+
+      // Use for production instance
+      const response = await fetch(`${MUSIC_GENRE_CLASSIFICATION_API}/predict`, {
         method: 'POST',
         body: formData,
       });
