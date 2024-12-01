@@ -84,7 +84,6 @@ def predict():
         top_genres = predict_top_genres(model, spectrogram, top_k=10)
         return jsonify({'top_genres': top_genres})
 
-    # Adding try except for clear error handling
     except Exception as e:
         print(f"Error: {e}")
         traceback.print_exc()
