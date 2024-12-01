@@ -4,12 +4,13 @@ import torch
 from train_model import GenreClassificationCNN, audio_to_melspectrogram  
 import os
 import traceback
+import logging
 
 # Define the model
 app = Flask(__name__)
 # Use for development instance
 # CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000/"]}})
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
 # # Use for production instance
 # CORS(app, resources={r"/*": {"origins": ["https://top-n-music-genre-classification.onrender.com"]}})
@@ -65,28 +66,34 @@ def predict_top_genres(model, spectrogram, top_k=10):
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-
-        if request.method == 'OPTIONS':
-            return '', 200
+        logging.debug("Request to backend success!")
 
         if 'file' not in request.files:
+            logging.error("ERROR 400: No file in request")
             return jsonify({'error': 'No file uploaded'}), 400
+
+        logging.info("File in the request.files!")
 
         file = request.files['file']
         file_path = "temp_audio.wav"
+        logging.debug("Saving the uploaded file to file_path")
         file.save(file_path)
 
         spectrogram = preprocess_audio(file_path)
         os.remove(file_path)  # Clean up temporary file
+        logging.debug("Removing temporary file")
 
         if spectrogram is None:
+            logging.error("ERROR 500: Error processing audio file.")
             return jsonify({'error': 'Error processing audio file'}), 500
 
         top_genres = predict_top_genres(model, spectrogram, top_k=10)
+        logging.info("Prediction is successful, top genres displayed")
         return jsonify({'top_genres': top_genres})
 
     except Exception as e:
         print(f"Error: {e}")
+        logging.error("ERROR 500: Internal server")
         traceback.print_exc()
         return jsonify({'ERROR: Internal server.'}), 500
 
