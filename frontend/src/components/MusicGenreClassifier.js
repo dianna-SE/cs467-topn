@@ -40,6 +40,9 @@ export const MusicGenreClassifier = () => {
       // Use for production instance
       const response = await fetch(`${MUSIC_GENRE_CLASSIFICATION_API}/predict`, {
         method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
         body: formData,
       });
 
