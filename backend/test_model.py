@@ -17,36 +17,54 @@ genre_to_label = {
 
 
 def load_model(model_path, num_classes=10):
-    # Initialize the model and load the trained weights
+    # Initialize the original model structure
     model = GenreClassificationCNN(num_classes=num_classes)
-    model.load_state_dict(torch.load(model_path))
-    model.eval()  # Set model to evaluation mode
+
+    # Apply quantization dynamically during loading
+    model = torch.quantization.quantize_dynamic(
+        model,  # Model structure
+        {torch.nn.Linear},  # Apply quantization to linear layers
+        dtype=torch.qint8  # Use int8 quantization
+    )
+
+    try:
+        model.load_state_dict(torch.load(model_path))
+        model.eval()  # Set model to evaluation mode
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return None
+
     return model
 
 
 def preprocess_audio(file_path):
-    # Convert audio to a Mel spectrogram and resize to model's input size
+    # Convert audio to a Mel spectrogram
     spectrogram = audio_to_melspectrogram(file_path)
     if spectrogram is None:
         print("Error: Unable to process the audio file.")
         return None
 
-    # Convert to torch tensor and add batch and channel dimensions
-    spectrogram = torch.tensor(spectrogram, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-    spectrogram = torch.nn.functional.interpolate(spectrogram, size=(64, 64))
+    # Convert to torch tensor and resize to (64, 64)
+    spectrogram = torch.tensor(spectrogram, dtype=torch.float32).unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
+    spectrogram = torch.nn.functional.interpolate(spectrogram, size=(64, 64), mode='bilinear', align_corners=False)
     return spectrogram
 
 
-def predict_top_genres(model, spectrogram, top_k=10):
-    # Run the model to get the prediction
-    with torch.no_grad():  # Disable gradient calculation for inference
-        output = model(spectrogram)
-        probabilities = torch.exp(output)  # Convert log-softmax output to probabilities
-        top_p, top_classes = probabilities.topk(top_k, dim=1)  # Get top-k predictions
+def predict_top_genres(model, spectrograms, top_k=10):
+    # Run predictions for a batch of spectrograms
+    with torch.no_grad():
+        outputs = model(spectrograms)
+        probabilities = torch.exp(outputs)
+        top_p, top_classes = probabilities.topk(top_k, dim=1)
 
-        # Prepare top genres and confidence scores as a list of tuples
-        top_genres = [(genre_to_label[class_idx.item()], confidence.item()) for class_idx, confidence in zip(top_classes[0], top_p[0])]
-        return top_genres
+        results = []
+        for idx in range(len(spectrograms)):
+            top_genres = [
+                (genre_to_label[class_idx.item()], confidence.item())
+                for class_idx, confidence in zip(top_classes[idx], top_p[idx])
+            ]
+            results.append(top_genres)
+        return results
 
 
 # Main function to load model, process audio, and predict genre
