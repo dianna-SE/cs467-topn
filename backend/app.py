@@ -6,6 +6,9 @@ import os
 import traceback
 import logging
 
+# Explicitly setting the quantization engine
+torch.backends.quantized.engine = 'qnnpack'
+
 # Define the model
 app = Flask(__name__)
 CORS(app)
@@ -30,15 +33,8 @@ genre_to_label = {
 
 # Load the model once at startup
 def load_model(model_path, num_classes=10):
-    # Initialize the original model structure
+    # Initialize the model structure
     model = GenreClassificationCNN(num_classes=num_classes)
-
-    # Apply quantization dynamically
-    model = torch.quantization.quantize_dynamic(
-        model,  # Model structure
-        {torch.nn.Linear},  # Apply quantization to linear layers
-        dtype=torch.qint8  # Use int8 quantization
-    )
 
     try:
         # Load the state dictionary of the model
