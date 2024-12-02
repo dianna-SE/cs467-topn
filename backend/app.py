@@ -37,17 +37,34 @@ def load_model(model_path, num_classes=10):
     model = GenreClassificationCNN(num_classes=num_classes)
 
     try:
-        # Load the state dictionary of the model
-        model.load_state_dict(torch.load(model_path, map_location="cpu"))
-        model.eval()  # Set the model to evaluation mode
-    except Exception as e:
-        print(f"Error loading model: {e}")
-        return None
+        # Step 1: Initialize the original model structure
+        model = GenreClassificationCNN(num_classes=num_classes)
 
-    return model
+        # Step 2: Apply dynamic quantization
+        model = torch.quantization.quantize_dynamic(
+            model,  # The model architecture
+            {torch.nn.Linear},  # Quantize only the linear layers
+            dtype=torch.qint8  # Use int8 for quantization
+        )
+
+        # Step 3: Load the saved state dictionary into the quantized model
+        state_dict = torch.load(model_path, map_location="cpu")
+        model.load_state_dict(state_dict)
+
+        # Step 4: Set the model to evaluation mode
+        model.eval()
+        print("Model successfully loaded and ready for inference.")
+        return model
+
+    except Exception as e:
+        print(f"Error loading the model: {e}")
+        return None
 
 
 model = load_model("quantized_genre_classification_cnn.pth")  # Adjust the path if needed
+
+if model is None:
+    raise RuntimeError("Failed to load the model.")
 
 
 # Helper function to process audio file
