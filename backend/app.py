@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import torch
-from train_model import GenreClassificationCNN, audio_to_melspectrogram  
+from train_model import GenreClassificationCNN, audio_to_melspectrogram
 import os
 import traceback
 import logging
@@ -30,9 +30,24 @@ genre_to_label = {
 
 # Load the model once at startup
 def load_model(model_path, num_classes=10):
+    # Initialize the original model structure
     model = GenreClassificationCNN(num_classes=num_classes)
-    model.load_state_dict(torch.load(model_path, map_location="cpu"))
-    model.eval()
+
+    # Apply quantization dynamically
+    model = torch.quantization.quantize_dynamic(
+        model,  # Model structure
+        {torch.nn.Linear},  # Apply quantization to linear layers
+        dtype=torch.qint8  # Use int8 quantization
+    )
+
+    try:
+        # Load the state dictionary of the model
+        model.load_state_dict(torch.load(model_path, map_location="cpu"))
+        model.eval()  # Set the model to evaluation mode
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return None
+
     return model
 
 
@@ -41,12 +56,15 @@ model = load_model("quantized_genre_classification_cnn.pth")  # Adjust the path 
 
 # Helper function to process audio file
 def preprocess_audio(file_path):
+    # Convert audio to a Mel spectrogram
     spectrogram = audio_to_melspectrogram(file_path)
     if spectrogram is None:
         print("Error: Unable to process the audio file.")
         return None
-    spectrogram = torch.tensor(spectrogram, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-    spectrogram = torch.nn.functional.interpolate(spectrogram, size=(64, 64))
+
+    # Convert to torch tensor and resize to (64, 64)
+    spectrogram = torch.tensor(spectrogram, dtype=torch.float32).unsqueeze(0).unsqueeze(0)  # Add batch and channel dimensions
+    spectrogram = torch.nn.functional.interpolate(spectrogram, size=(64, 64), mode='bilinear', align_corners=False)
     return spectrogram
 
 
