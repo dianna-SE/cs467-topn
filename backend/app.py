@@ -36,7 +36,7 @@ def load_model(model_path, num_classes=10):
     return model
 
 
-model = load_model("genre_classification_cnn.pth")  # Adjust the path if needed
+model = load_model("quantized_genre_classification_cnn.pth")  # Adjust the path if needed
 
 
 # Helper function to process audio file
