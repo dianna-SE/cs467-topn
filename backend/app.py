@@ -5,6 +5,7 @@ from train_model import GenreClassificationCNN, audio_to_melspectrogram
 import os
 import traceback
 import logging
+import tempfile
 
 # Explicitly setting the quantization engine
 torch.backends.quantized.engine = 'qnnpack'
@@ -105,9 +106,25 @@ def predict():
         logging.info("File in the request.files!")
 
         file = request.files['file']
-        file_path = "temp_audio.wav"
-        logging.debug(f"Saving the uploaded file to file_path: {file_path}")
-        file.save(file_path)
+
+        # file_path = "temp_audio.wav"
+        # logging.debug(f"Saving the uploaded file to file_path: {file_path}")
+        # file.save(file_path)
+
+        #  Author: Geeks for Geeks
+        #  Date Accessed: December 3, 2024
+        #  # Saving file to temp instead of static location
+        #  Adapted from source URL:
+        #       https://www.geeksforgeeks.org/python-tempfile-module/
+
+        if not (file.filename.endswith('.wav') or file.filename.endswith('.mp3')):
+            logging.error("ERROR 400: Invalid file type.")
+            return jsonify({'error': 'Invalid file type, please upload a .wav or .mp3 file'}), 400
+
+        with tempfile.NamedTemporaryFile(delete=False) as temp_audio:
+            file_path = temp_audio.name
+            file.save(file_path)
+            logging.debug(f"Saved file to {file_path}")
 
         spectrogram = preprocess_audio(file_path)
         os.remove(file_path)  # Clean up temporary file

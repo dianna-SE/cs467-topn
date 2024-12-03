@@ -67,7 +67,7 @@ export const MusicGenreClassifier = () => {
         <h1 className="text-4xl font-bold mb-2 text-center">Upload a song to</h1>
         <h1 className="text-4xl font-bold mb-8 text-center">discover the genre...</h1>
         <UploadButton onFileChange={handleFileChange} />
-        <h3 className="mt-5 text-center text-gray-800 dark:text-gray-400">*File must be in .wav format</h3>
+        <h3 className="mt-5 text-center text-gray-800 dark:text-gray-400">*File must be in .wav or .mp3 format</h3>
 
         {/* Conditionally render "View Last Result" button if predictions are available */}
         {predictions.length > 0 && !isModalOpen && (
