@@ -11,7 +11,8 @@ torch.backends.quantized.engine = 'qnnpack'
 
 # Define the model
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Increase fto 50MB file size limit for flask
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
@@ -139,19 +140,12 @@ def root():
 
 
 # Handle CORS for responses
-@app.after_request
-def after_request(response):
-    # origin = request.headers.get('Origin')
-
-    # Origins for dev and prod instance
-    # instance_origins = ["https://top-n-music-genre-classification.onrender.com", "http://localhost:3000"]
-
-    # if origin in instance_origins:
-    #     response.headers['Access-Control-Allow-Origin'] = origin
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    return response
+# @app.after_request
+# def after_request(response):
+#     response.headers['Access-Control-Allow-Origin'] = '*'
+#     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+#     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+#     return response
 
 
 # Run the app in development mode
