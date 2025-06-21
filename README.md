@@ -1,5 +1,8 @@
+# Top-N Genre Music Classification
+https://www.genrewizard.com/
 
 # Install necessary packages and dependencies before running web application: 
+0. https://www.genrewizard.com/ 
 1. cd to backend folder and run ‘npm install’. 
 2. cd to frontend folder and run ‘npm install’.
 3. These will run dependencies to properly run both applications.
